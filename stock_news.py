@@ -11,9 +11,9 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def load_copper_stocks():
-    """Load lithium stock tickers from CSV file"""
+    """Load nickel stock tickers from CSV file"""
     stocks = []
-    csv_path = 'lithium_stocks_complete.csv'
+    csv_path = 'nickel_stocks_complete.csv'
     
     try:
         with open(csv_path, 'r', encoding='utf-8') as file:
@@ -33,11 +33,11 @@ def load_copper_stocks():
                     'exchange': exchange
                 })
         
-        logging.info(f"Loaded {len(stocks)} copper stocks from CSV")
+        logging.info(f"Loaded {len(stocks)} nickel stocks from CSV")
         return stocks
         
     except Exception as e:
-        logging.error(f"Error loading copper stocks: {e}")
+        logging.error(f"Error loading nickel stocks: {e}")
         return []
 
 def map_ticker_for_yahoo(ticker, exchange):

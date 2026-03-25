@@ -260,7 +260,7 @@ def main():
             # Source 6: Mining Weekly
             logging.info("Scraping Mining Weekly...")
             try:
-                articles = scrape_articles_from_miningweekly(cursor, 'copper')
+                articles = scrape_articles_from_miningweekly(cursor, 'nickel')
                 for article in articles:
                     insert_general_news(
                         cursor, connection,

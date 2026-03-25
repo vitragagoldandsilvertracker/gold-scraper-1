@@ -37,13 +37,13 @@ def init_driver():
 
 def scrape_latest_articles_from_mining_site(cursor):
     """
-    Scrape the latest articles from the "mining.com" website related to copper.
+    Scrape the latest articles from the "mining.com" website related to nickel.
     """
     driver = init_driver()
     if not driver:
         return []
 
-    base_url = "https://www.mining.com/?s=copper"
+    base_url = "https://www.mining.com/?s=nickel"
     all_data = []
 
     try:
@@ -119,7 +119,7 @@ def scrape_mining_review_data(cursor):
 
     try:
 
-        main_url = "https://www.miningreview.com/?s=copper&category=&company="
+        main_url = "https://www.miningreview.com/?s=nickel&category=&company="
         all_data = []
 
         driver.get(main_url)
@@ -353,7 +353,7 @@ def scrape_miningmx_articles(cursor):
     print("WebDriver setup complete.")
  
     try:
-        base_url = 'https://www.miningmx.com/news/copper/'
+        base_url = 'https://www.miningmx.com/news/nickel/'
         print(f"Accessing base URL: {base_url}")
         driver.get(base_url)
 
@@ -392,7 +392,7 @@ def scrape_metaldaily_articles(cursor):
 
     try:
 
-        url = "https://www.metalsdaily.com/news/copper-news/"
+        url = "https://www.metalsdaily.com/news/nickel-news/"
 
         driver.get(url)
 

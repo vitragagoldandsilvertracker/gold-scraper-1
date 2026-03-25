@@ -46,7 +46,7 @@ def init_driver():
     chrome_options.add_argument("--window-size=1024,768")
     
     chrome_options.binary_location = "/usr/bin/chromium"
-    service = Service("/usr/local/bin/chromedriver")
+    service = Service("/usr/bin/chromedriver")
     
     driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.set_page_load_timeout(30)
@@ -54,9 +54,9 @@ def init_driver():
     return driver
 
 def load_copper_stocks():
-    """Load copper stock tickers from CSV file"""
+    """Load nickel stock tickers from CSV file"""
     stocks = []
-    csv_path = 'lithium_stocks_complete.csv'
+    csv_path = 'nickel_stocks_complete.csv'
     
     try:
         with open(csv_path, 'r', encoding='utf-8') as file:
@@ -76,11 +76,11 @@ def load_copper_stocks():
                     'exchange': exchange
                 })
         
-        logging.info(f"Loaded {len(stocks)} copper stocks from CSV")
+        logging.info(f"Loaded {len(stocks)} nickel stocks from CSV")
         return stocks
         
     except Exception as e:
-        logging.error(f"Error loading copper stocks: {e}")
+        logging.error(f"Error loading nickel stocks: {e}")
         return []
 
 def get_yahoo_finance_url(ticker, exchange):

@@ -1,8 +1,8 @@
 """
-YouTube Videos Updater Script for Lithium Content
+YouTube Videos Updater Script for Nickel Content
 
 This script updates the VideoPageData table with fresh YouTube videos
-by searching for lithium mining, lithium market analysis, and lithium-related content in different categories.
+by searching for nickel mining, nickel market analysis, and nickel-related content in different categories.
 """
 
 import sys
@@ -210,7 +210,7 @@ def search_youtube_videos(query, max_results=10):
 
 def is_relevant_video(title, channel, duration):
     """
-    Check if video is relevant to lithium content and has good quality indicators
+    Check if video is relevant to nickel content and has good quality indicators
     
     Args:
         title (str): Video title
@@ -222,13 +222,13 @@ def is_relevant_video(title, channel, duration):
     """
     text = (title + ' ' + channel).lower()
     
-    # Must contain lithium-related keywords
+    # Must contain nickel-related keywords
     required_keywords = [
-        'lithium', 'lithium mining', 'lithium price', 'lithium market', 'lithium stocks',
-        'lithium futures', 'lithium investment', 'battery metals', 'ev metals',
-        'mining', 'commodity', 'metal prices', 'lithium demand', 'lithium supply',
-        'lithium carbonate', 'lithium hydroxide', 'spodumene', 'brine', 'hard rock lithium',
-        'electric vehicle', 'ev battery', 'battery technology'
+        'nickel', 'nickel mining', 'nickel price', 'nickel market', 'nickel stocks',
+        'nickel futures', 'nickel investment', 'battery metals', 'ev metals',
+        'mining', 'commodity', 'metal prices', 'nickel demand', 'nickel supply',
+        'nickel sulphide', 'nickel laterite', 'class 1 nickel', 'nickel pig iron',
+        'electric vehicle', 'ev battery', 'battery technology', 'stainless steel'
     ]
     
     # Exclude irrelevant content
@@ -277,36 +277,26 @@ def extract_company_info(title, channel):
     Returns:
         tuple: (company_name, stock_ticker)
     """
-    # Common lithium companies and their tickers
+    # Common nickel companies and their tickers
     companies = {
-        # Major Producers & Developers
-        'lithium americas': {'name': 'Lithium Americas', 'ticker': 'LAC'},
-        'standard lithium': {'name': 'Standard Lithium', 'ticker': 'SLI'},
-        'lithium argentina': {'name': 'Lithium Argentina', 'ticker': 'LAR'},
-        'sigma lithium': {'name': 'Sigma Lithium', 'ticker': 'SGML'},
-        'patriot battery': {'name': 'Patriot Battery Metals', 'ticker': 'PMET'},
-        'frontier lithium': {'name': 'Frontier Lithium', 'ticker': 'FL'},
-        'rock tech lithium': {'name': 'Rock Tech Lithium', 'ticker': 'RCK'},
-        'american lithium': {'name': 'American Lithium', 'ticker': 'LI'},
-        'lithium ionic': {'name': 'Lithium Ionic', 'ticker': 'LTH'},
-        'power metals': {'name': 'Power Metals', 'ticker': 'PWM'},
-        
-        # Explorers
-        'green technology': {'name': 'Green Technology Metals', 'ticker': 'GT'},
-        'snow lake lithium': {'name': 'Snow Lake Lithium', 'ticker': 'LITM'},
-        'snow lake': {'name': 'Snow Lake Lithium', 'ticker': 'LITM'},
-        'brunswick exploration': {'name': 'Brunswick Exploration', 'ticker': 'BRW'},
-        'li-ft power': {'name': 'Li-FT Power', 'ticker': 'LIFT'},
-        'lift power': {'name': 'Li-FT Power', 'ticker': 'LIFT'},
-        'volt lithium': {'name': 'Volt Lithium', 'ticker': 'VLT'},
-        
-        # International Giants
-        'albemarle': {'name': 'Albemarle Corporation', 'ticker': 'ALB'},
-        'livent': {'name': 'Livent Corporation', 'ticker': 'LTHM'},
-        'sqm': {'name': 'Sociedad Química y Minera', 'ticker': 'SQM'},
-        'ganfeng': {'name': 'Ganfeng Lithium', 'ticker': '1772.HK'},
-        'pilbara minerals': {'name': 'Pilbara Minerals', 'ticker': 'PLS.AX'},
-        'pilbara': {'name': 'Pilbara Minerals', 'ticker': 'PLS.AX'}
+        'talon metals': {'name': 'Talon Metals', 'ticker': 'TLO'},
+        'power metallic': {'name': 'Power Metallic Mines', 'ticker': 'PNPN'},
+        'power nickel': {'name': 'Power Metallic Mines', 'ticker': 'PNPN'},
+        'canada nickel': {'name': 'Canada Nickel', 'ticker': 'CNC'},
+        'fpx nickel': {'name': 'FPX Nickel', 'ticker': 'FPX'},
+        'nickel 28': {'name': 'Nickel 28 Capital', 'ticker': 'NICX'},
+        'magna mining': {'name': 'Magna Mining', 'ticker': 'NICU'},
+        'royal nickel': {'name': 'Royal Nickel', 'ticker': 'RNC'},
+        'stillwater critical': {'name': 'Stillwater Critical Minerals', 'ticker': 'SRL'},
+        'grid metals': {'name': 'Grid Metals', 'ticker': 'GRDM'},
+        'nickel creek': {'name': 'Nickel Creek Platinum', 'ticker': 'NIC'},
+        'first atlantic nickel': {'name': 'First Atlantic Nickel', 'ticker': 'FAN'},
+        'palladium one': {'name': 'Palladium One Mining', 'ticker': 'PDCO'},
+        'ev nickel': {'name': 'EV Nickel', 'ticker': 'EVNI'},
+        'norilsk': {'name': 'Norilsk Nickel', 'ticker': 'NILSY'},
+        'vale': {'name': 'Vale', 'ticker': 'VALE'},
+        'glencore': {'name': 'Glencore', 'ticker': 'GLNCY'},
+        'bhp': {'name': 'BHP Group', 'ticker': 'BHP'},
     }
     
     text = (title + ' ' + channel).lower()
@@ -319,47 +309,47 @@ def extract_company_info(title, channel):
 
 def scrape_youtube_videos():
     """
-    Main function to scrape YouTube videos for lithium content.
+    Main function to scrape YouTube videos for nickel content.
     Returns a list of videos organized by category.
     """
     logger.info("=" * 60)
-    logger.info("Starting YouTube Videos Scraping for Lithium Content")
+    logger.info("Starting YouTube Videos Scraping for Nickel Content")
     logger.info("=" * 60)
     
     # Define search queries for each category (multiple queries per category for better results)
     search_queries = {
         'Featured': [
-            'lithium market analysis',
-            'lithium price forecast', 
-            'lithium investment outlook',
-            'lithium stocks 2024',
-            'lithium demand supply',
-            'battery metals investment'
+            'nickel market analysis',
+            'nickel price forecast',
+            'nickel investment outlook',
+            'nickel stocks 2024',
+            'nickel demand supply',
+            'battery metals nickel investment'
         ],
         'Company': [
-            'lithium mining stocks',
-            'Lithium Americas news',
-            'Albemarle lithium',
-            'Sigma Lithium production',
-            'lithium mining companies',
-            'lithium stock analysis'
+            'nickel mining stocks',
+            'Canada Nickel company news',
+            'Talon Metals nickel',
+            'FPX Nickel update',
+            'nickel mining companies',
+            'nickel stock analysis'
         ],
         'Podcast': [
-            'lithium market podcast',
+            'nickel market podcast',
             'battery metals podcast',
-            'mining podcast',
-            'commodity trading podcast',
-            'lithium investment interview',
-            'ev metals podcast'
+            'mining podcast nickel',
+            'commodity trading nickel',
+            'nickel investment interview',
+            'ev metals nickel podcast'
         ],
         'Education': [
-            'what is lithium metal',
-            'how lithium is mined',
-            'lithium uses applications',
-            'lithium market explained',
-            'lithium investment guide',
-            'battery metals explained',
-            'lithium carbonate vs hydroxide'
+            'what is nickel metal',
+            'how nickel is mined',
+            'nickel uses applications',
+            'nickel market explained',
+            'nickel investment guide',
+            'battery metals nickel explained',
+            'nickel sulphide vs laterite'
         ]
     }
     
