@@ -15,7 +15,7 @@ from insert_queries import check_url_exists
 
 
 def init_driver():
-    """Initialize Chrome WebDriver"""
+    """Initialize Chrome WebDriver with automatic driver management"""
     chrome_options = Options()
     chrome_options.add_argument("--headless=new")
     chrome_options.add_argument("--no-sandbox")
@@ -25,14 +25,37 @@ def init_driver():
     chrome_options.add_argument("--disable-software-rasterizer")
     chrome_options.add_argument("--disable-setuid-sandbox")
     chrome_options.add_argument("--window-size=1024,768")
-    
-    chrome_options.binary_location = "/usr/bin/chromium"
-    service = Service("/usr/bin/chromedriver")
-    
-    driver = webdriver.Chrome(service=service, options=chrome_options)
-    driver.set_page_load_timeout(30)
-    driver.implicitly_wait(5)
-    return driver
+
+    try:
+        from webdriver_manager.chrome import ChromeDriverManager
+        service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service, options=chrome_options)
+        driver.set_page_load_timeout(30)
+        driver.implicitly_wait(5)
+        return driver
+    except Exception as e:
+        import logging
+        logging.warning(f"webdriver-manager failed: {e}, trying system paths...")
+
+    system_paths = [
+        ("/usr/bin/chromium", "/usr/bin/chromedriver"),
+        ("/usr/bin/chromium-browser", "/usr/bin/chromedriver"),
+        ("/usr/bin/google-chrome", "/usr/bin/chromedriver"),
+    ]
+    for chrome_bin, driver_bin in system_paths:
+        if os.path.exists(chrome_bin) and os.path.exists(driver_bin):
+            try:
+                chrome_options.binary_location = chrome_bin
+                service = Service(driver_bin)
+                driver = webdriver.Chrome(service=service, options=chrome_options)
+                driver.set_page_load_timeout(30)
+                driver.implicitly_wait(5)
+                return driver
+            except Exception as e:
+                import logging
+                logging.warning(f"Failed with {chrome_bin}: {e}")
+
+    return None
 
 
 def scrape_latest_articles_from_mining_site(cursor):

@@ -17,7 +17,7 @@ import logging
 
 
 def init_driver():
-    """Initialize Chrome WebDriver"""
+    """Initialize Chrome WebDriver with automatic driver management"""
     chrome_options = Options()
     chrome_options.add_argument("--headless=new")
     chrome_options.add_argument("--no-sandbox")
@@ -27,14 +27,38 @@ def init_driver():
     chrome_options.add_argument("--disable-software-rasterizer")
     chrome_options.add_argument("--disable-setuid-sandbox")
     chrome_options.add_argument("--window-size=1024,768")
-    
-    chrome_options.binary_location = "/usr/bin/chromium"
-    service = Service("/usr/bin/chromedriver")
-    
-    driver = webdriver.Chrome(service=service, options=chrome_options)
-    driver.set_page_load_timeout(30)
-    driver.implicitly_wait(5)
-    return driver
+
+    # Try webdriver-manager first (auto-downloads correct ChromeDriver)
+    try:
+        from webdriver_manager.chrome import ChromeDriverManager
+        service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service, options=chrome_options)
+        driver.set_page_load_timeout(30)
+        driver.implicitly_wait(5)
+        return driver
+    except Exception as e:
+        logging.warning(f"webdriver-manager failed: {e}, trying system paths...")
+
+    # Fallback to known system paths (Linux server / Docker)
+    system_paths = [
+        ("/usr/bin/chromium", "/usr/bin/chromedriver"),
+        ("/usr/bin/chromium-browser", "/usr/bin/chromedriver"),
+        ("/usr/bin/google-chrome", "/usr/bin/chromedriver"),
+    ]
+    for chrome_bin, driver_bin in system_paths:
+        if os.path.exists(chrome_bin) and os.path.exists(driver_bin):
+            try:
+                chrome_options.binary_location = chrome_bin
+                service = Service(driver_bin)
+                driver = webdriver.Chrome(service=service, options=chrome_options)
+                driver.set_page_load_timeout(30)
+                driver.implicitly_wait(5)
+                return driver
+            except Exception as e:
+                logging.warning(f"Failed with {chrome_bin}: {e}")
+
+    logging.error("Could not initialize Chrome WebDriver via any method")
+    return None
 
 
 def wait_and_find_element(driver, by, value, timeout=10):
