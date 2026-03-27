@@ -236,7 +236,7 @@ def is_relevant_video(title, channel, duration):
         'music', 'song', 'album', 'concert', 'gaming', 'game', 'movie', 'film',
         'recipe', 'cooking', 'fashion', 'beauty', 'sports', 'football', 'basketball',
         'unboxing', 'reaction', 'prank', 'challenge', 'tiktok', 'shorts compilation',
-        'lithium battery diy', 'lithium battery repair', 'phone battery', 'laptop battery',
+        'nickel battery diy', 'nickel battery repair', 'phone battery', 'laptop battery',
         'battery replacement', 'battery mod', 'battery hack'
     ]
     

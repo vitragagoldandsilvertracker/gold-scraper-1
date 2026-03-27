@@ -465,7 +465,7 @@ def process_all_stocks():
 
 if __name__ == "__main__":
     # Set up logging
-    logger.info("🚀 Comprehensive Copper Stock Fetcher Starting...")
+    logger.info("🚀 Comprehensive Nickel Stock Fetcher Starting...")
     logger.info(f"Timestamp: {datetime.now()}")
     
     # Run the comprehensive processing

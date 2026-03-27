@@ -53,7 +53,7 @@ def init_driver():
     driver.implicitly_wait(5)
     return driver
 
-def load_copper_stocks():
+def load_nickel_stocks():
     """Load nickel stock tickers from CSV file"""
     stocks = []
     csv_path = 'nickel_stocks_complete.csv'
@@ -185,7 +185,7 @@ def scrape_press_releases_for_ticker(driver, ticker, company_name, exchange, cur
 
 
 def main():
-    """Main function to scrape press releases for all copper stocks"""
+    """Main function to scrape press releases for all nickel stocks"""
     logging.info("Starting Optimized Press Release Scraper (1 per ticker)")
     
     # Get database connection
@@ -194,8 +194,8 @@ def main():
         logging.error("Failed to connect to database")
         return
     
-    # Load copper stocks
-    stocks = load_copper_stocks()
+    # Load nickel stocks
+    stocks = load_nickel_stocks()
     if not stocks:
         logging.error("No stocks loaded")
         return

@@ -10,7 +10,7 @@ import time
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def load_copper_stocks():
+def load_nickel_stocks():
     """Load nickel stock tickers from CSV file"""
     stocks = []
     csv_path = 'nickel_stocks_complete.csv'
@@ -72,7 +72,7 @@ def get_all_stock_news(cursor):
     Fetches the latest news for all tickers from the CSV file.
     Returns a list of news items with ticker information.
     """
-    stocks = load_copper_stocks()
+    stocks = load_nickel_stocks()
     return_all_news = []
     
     # Process stocks in batches to avoid overwhelming the API
