@@ -21,14 +21,7 @@ from press_release_scraper import main as run_press_release_scraper
 from stock_news import main as run_stock_news_fetcher
 from substacks_scraper import scrape_substack_nickel_posts, insert_substack_posts_to_db, ensure_table_exists
 from youtube_scraper import main as run_youtube_scraper
-from news_scrape import (
-    scrape_latest_articles_from_mining_site,
-    scrape_mining_review_data,
-    scrape_lppm_com_news,
-    scrape_miningmx_articles,
-    scrape_metaldaily_articles,
-    scrape_articles_from_miningweekly
-)
+from news_scrape import scrape_rss_feeds
 from database_config import get_curser
 from database_operations import update_process_status, insert_general_news
 
@@ -149,47 +142,25 @@ def main():
             logging.error(f"Error in process5: {e}")
             
     elif current_process == "process6":
-        # General news scraper
-        logging.info("STARTING PROCESS 6: GENERAL NEWS SCRAPER")
+        # General news scraper — RSS feeds
+        logging.info("STARTING PROCESS 6: RSS NEWS SCRAPER")
         connection, cursor = get_curser()
         logging.info("Updating to process1 at start (cycling back)")
         update_process_status(cursor, connection, "process1")
         cursor.close()
         connection.close()
-        
+
         try:
             connection, cursor = get_curser()
-            
-            # Scrape from multiple sources
-            all_articles = []
-            
-            # Source 1: Mining.com
-            logging.info("Scraping Mining.com...")
-            try:
-                articles = scrape_latest_articles_from_mining_site(cursor)
-                for article in articles:
+
+            articles = scrape_rss_feeds(cursor)
+
+            inserted = 0
+            for article in articles:
+                try:
                     insert_general_news(
                         cursor, connection,
-                        source="Mining.com",
-                        title=article.get('title'),
-                        url=article.get('url'),
-                        content=article.get('content'),
-                        image_url=article.get('image_url'),
-                        date=article.get('date')
-                    )
-                all_articles.extend(articles)
-                logging.info(f"Mining.com: {len(articles)} articles")
-            except Exception as e:
-                logging.error(f"Error scraping Mining.com: {e}")
-            
-            # Source 2: Mining Review
-            logging.info("Scraping Mining Review...")
-            try:
-                articles = scrape_mining_review_data(cursor)
-                for article in articles:
-                    insert_general_news(
-                        cursor, connection,
-                        source="Mining Review",
+                        source=article.get('source'),
                         title=article.get('title'),
                         url=article.get('url'),
                         content=article.get('content'),
@@ -197,89 +168,14 @@ def main():
                         image_url=article.get('image_url'),
                         date=article.get('date')
                     )
-                all_articles.extend(articles)
-                logging.info(f"Mining Review: {len(articles)} articles")
-            except Exception as e:
-                logging.error(f"Error scraping Mining Review: {e}")
-            
-            # Source 3: LPPM.com
-            logging.info("Scraping LPPM.com...")
-            try:
-                articles = scrape_lppm_com_news(cursor)
-                for article in articles:
-                    insert_general_news(
-                        cursor, connection,
-                        source="LPPM.com",
-                        title=article.get('title'),
-                        url=article.get('link'),
-                        content=article.get('content'),
-                        summary=article.get('summary'),
-                        date=article.get('date')
-                    )
-                all_articles.extend(articles)
-                logging.info(f"LPPM.com: {len(articles)} articles")
-            except Exception as e:
-                logging.error(f"Error scraping LPPM.com: {e}")
-            
-            # Source 4: MiningMX
-            logging.info("Scraping MiningMX...")
-            try:
-                articles = scrape_miningmx_articles(cursor)
-                for article in articles:
-                    insert_general_news(
-                        cursor, connection,
-                        source="MiningMX",
-                        title=article.get('title'),
-                        url=article.get('url'),
-                        image_url=article.get('image_url'),
-                        date=article.get('date')
-                    )
-                all_articles.extend(articles)
-                logging.info(f"MiningMX: {len(articles)} articles")
-            except Exception as e:
-                logging.error(f"Error scraping MiningMX: {e}")
-            
-            # Source 5: Metals Daily
-            logging.info("Scraping Metals Daily...")
-            try:
-                articles = scrape_metaldaily_articles(cursor)
-                for article in articles:
-                    insert_general_news(
-                        cursor, connection,
-                        source="Metals Daily",
-                        title=article.get('title'),
-                        url=article.get('url'),
-                        content=article.get('content'),
-                        date=article.get('date')
-                    )
-                all_articles.extend(articles)
-                logging.info(f"Metals Daily: {len(articles)} articles")
-            except Exception as e:
-                logging.error(f"Error scraping Metals Daily: {e}")
-            
-            # Source 6: Mining Weekly
-            logging.info("Scraping Mining Weekly...")
-            try:
-                articles = scrape_articles_from_miningweekly(cursor, 'gold')
-                for article in articles:
-                    insert_general_news(
-                        cursor, connection,
-                        source="Mining Weekly",
-                        title=article.get('title'),
-                        url=article.get('url'),
-                        content=article.get('content'),
-                        image_url=article.get('image_url'),
-                        date=article.get('date')
-                    )
-                all_articles.extend(articles)
-                logging.info(f"Mining Weekly: {len(articles)} articles")
-            except Exception as e:
-                logging.error(f"Error scraping Mining Weekly: {e}")
-            
-            logging.info(f"Process 6 completed - Total articles: {len(all_articles)}")
+                    inserted += 1
+                except Exception as e:
+                    logging.error(f"Error inserting article '{article.get('title', '')[:50]}': {e}")
+
+            logging.info(f"Process 6 completed — {inserted}/{len(articles)} articles inserted")
             cursor.close()
             connection.close()
-            
+
         except Exception as e:
             logging.error(f"Error in process6: {e}")
     
